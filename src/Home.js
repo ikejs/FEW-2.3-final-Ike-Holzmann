@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Title from './Title';
 import Search from './Search';
 import Characters from './Characters';
-import { response } from 'express';
 
 class Home extends Component {
 
@@ -20,23 +19,22 @@ class Home extends Component {
     fetch(`https://swapi.dev/api/people/${num}/`)
       .then(response1 => response1.json())
       .then(character => {
-        fetch(`https://swapi.dev/api/planets/${num}/`)
+        fetch(character.homeworld)
           .then(response2 => response2.json())
           .then(homeworld => {
-            console.log(character + homeworld)
+            character.homeworld = homeworld;
+            this.setState({ currentCharacter: character });
           });
-      })
-     
-
-  }
-
-  changeCharNum(num) {
-    this.setState({ charNum: num })
+      });
   }
 
   addCharacter = (character) => {
     const newCharacters = this.state.characters.concat(character);
     this.setState({ characters: newCharacters })
+  }
+
+  changeCharNum(num) {
+    this.setState({ charNum: num })
   }
 
   componentDidMount() {
